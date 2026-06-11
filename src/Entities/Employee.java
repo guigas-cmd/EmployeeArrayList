@@ -41,12 +41,6 @@ public class Employee {
         salary = salary + (salary * percentage / 100);
     }
 
-    public void outputSout(){
-        System.out.println("ID: " + getID());
-        System.out.println("Nome: " + getName());
-        System.out.println("Salario: " + getSalary());
-    }
-
     @Override
     public String toString() {
         return

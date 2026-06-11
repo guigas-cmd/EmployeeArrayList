@@ -2,9 +2,8 @@ package Application;
 
 import Entities.Employee;
 
-import java.net.IDN;
+
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Program {
 
@@ -12,14 +11,14 @@ public class Program {
         Locale.setDefault(Locale.US);
         Scanner sc = new Scanner(System.in);
 
-        List<Employee> emp = new ArrayList<>();
+        List<Employee> list = new ArrayList<>();
 
         System.out.println("How many employees will be registered? ");
         int n = sc.nextInt();
-        int ide;
-        String nome;
-        double salario;
-        double percentage = 0;
+        int id;
+        String name;
+        Double salary;
+        Double percentage;
 
         for (int i = 1; i <= n; i++) {
             System.out.println();
@@ -27,48 +26,46 @@ public class Program {
             System.out.println("Emplyoee #" + i);
 
             System.out.print("id: " );
-            ide = sc.nextInt();
+            id = sc.nextInt();
 
             System.out.print("Name: " );
-            nome = sc.next();
+            name = sc.next();
 
             System.out.print("Salary: " );
-            salario = sc.nextDouble();
+            salary = sc.nextDouble();
 
-            Employee empArmazened = new Employee(ide, nome, salario);
-            emp.add(empArmazened);
+            Employee empArmazened = new Employee(id, name, salary);
+            list.add(empArmazened);
         }
         System.out.println();
 
 
-
         System.out.print("Enter the employee ID that will have salary increase: ");
-        int idSearch = sc.nextInt();
+        int idIncrease = sc.nextInt();
 
-        int count = 0;
-        Employee employe = null; // instanciacao de objeto valendo nulo
-        for (Employee x : emp){
-            count++;
-            if (x.getID() == idSearch){
-                employe = x;
-
-                System.out.print("Enter the percentage: ");
-                percentage = sc.nextDouble();
-                employe.increaseSalary(percentage);
-
-
-                System.out.println("ID's correct = " + x);
-                break;
-            }
-            else if (count == emp.size()){
-                System.out.println("This ID does not exist!");
-            }
+        Integer positionID = position(list, idIncrease); // ref (List<Employee> list, int id)...
+        if (positionID == null){
+            System.out.printf("Entered ID [%d] || This ID does not exist..." , idIncrease);
+        } else {
+            System.out.print("Enter the percentage: ");
+            percentage = sc.nextDouble();
+            list.get(positionID).increaseSalary(percentage);
         }
 
+        System.out.println();
         System.out.println("List of Employees:");
-        for(Employee x : emp){
+        for(Employee x : list){
             System.out.println(x);
         }
         sc.close();
     }
-}
+
+    // funcao que encontrara a posicao do id, caso contrario retornará null
+    public static Integer position(List<Employee> list, int id) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getID() == id) { return i; }
+        }
+        return null;
+    }
+
+    }
