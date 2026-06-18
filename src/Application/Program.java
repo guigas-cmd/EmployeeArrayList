@@ -1,8 +1,5 @@
 package Application;
-
 import Entities.Employee;
-
-
 import java.util.*;
 
 public class Program {
@@ -11,11 +8,12 @@ public class Program {
         Locale.setDefault(Locale.US);
         Scanner sc = new Scanner(System.in);
 
-        List<Employee> list = new ArrayList<>();
+        // PART1 ---
 
+        List<Employee> list = new ArrayList<>();
         System.out.println("How many employees will be registered? ");
         int n = sc.nextInt();
-        int id;
+        Integer id;
         String name;
         Double salary;
         Double percentage;
@@ -27,6 +25,10 @@ public class Program {
 
             System.out.print("id: " );
             id = sc.nextInt();
+            while(hasID(list, id)){
+                System.out.println("ID already taken, try again: ");
+                id = sc.nextInt();
+            }
 
             System.out.print("Name: " );
             name = sc.next();
@@ -34,33 +36,44 @@ public class Program {
             System.out.print("Salary: " );
             salary = sc.nextDouble();
 
-            Employee empArmazened = new Employee(id, name, salary);
-            list.add(empArmazened);
+            Employee emp = new Employee(id, name, salary);
+            list.add(emp);
         }
         System.out.println();
 
 
-        System.out.print("Enter the employee ID that will have salary increase: ");
-        int idIncrease = sc.nextInt();
+        // PART 2 ---
 
-        Integer positionID = position(list, idIncrease); // ref (List<Employee> list, int id)...
-        if (positionID == null){
-            System.out.printf("Entered ID [%d] || This ID does not exist..." , idIncrease);
+        System.out.print("Enter the employee ID that will have salary increase: ");
+        int idSalary = sc.nextInt();
+
+        // (list, idSalary) -> ref de args da funcao position
+        // ** Integer pos = position(list, idSalary); or --
+        Employee emp = list.stream().filter(x -> x.getID() == idSalary).findFirst().orElse(null); // stream que encontra o id em idSalary
+
+        if (emp == null){
+            System.out.printf("Entered ID [%d] || This ID does not exist..." , idSalary);
         } else {
             System.out.print("Enter the percentage: ");
             percentage = sc.nextDouble();
-            list.get(positionID).increaseSalary(percentage);
+            emp.increaseSalary(percentage); // ... or --->
+            // list.get(pos).increaseSalary(percentage); //
         }
 
+        // FINAL --
         System.out.println();
         System.out.println("List of Employees:");
-        for(Employee x : list){
-            System.out.println(x);
+        for(Employee l : list){
+            System.out.println(l);
         }
         sc.close();
     }
 
-    // funcao que encontrara a posicao do id, caso contrario retornará null
+    public static boolean hasID(List<Employee> list, int id){
+        Employee emp = list.stream().filter(x -> x.getID() == id).findFirst().orElse(null);
+        return emp != null;
+    }
+
     public static Integer position(List<Employee> list, int id) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getID() == id) { return i; }
